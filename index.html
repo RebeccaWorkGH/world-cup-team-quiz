@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Game Isn't Over</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F2EF;
+    --ink:#1D2226;
+    --ink-soft:#56636E;
+    --blue:#0A66C2;
+    --blue-deep:#004182;
+    --gold:#F5B800;
+    --green:#057642;
+    --red:#CC1016;
+    --card:#FFFFFF;
+    --line:#E4E2DD;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:32px 16px 60px;
+  }
+  .app{
+    width:100%;
+    max-width:560px;
+  }
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+    padding:0 2px;
+  }
+  .brand{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--blue-deep);
+    letter-spacing:-0.01em;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .brand-badge{
+    background:var(--blue);
+    color:white;
+    width:22px;height:22px;
+    border-radius:5px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .notif{
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;
+    color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:5px 12px 5px 8px;
+  }
+  .notif-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--red);
+    flex-shrink:0;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:32px 28px;
+    box-shadow:0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  /* INTRO */
+  .eyebrow{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--red);
+    background:#FCE9E8;
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:16px;
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:30px;
+    line-height:1.15;
+    font-weight:700;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-size:15px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    margin:0 0 26px;
+  }
+  .sub b{color:var(--ink);}
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    border:none;
+    border-radius:24px;
+    padding:13px 26px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn-primary{
+    background:var(--blue);
+    color:white;
+  }
+  .btn-primary:hover{background:var(--blue-deep); transform:translateY(-1px);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--blue);
+    border:1.5px solid var(--blue);
+  }
+  .btn-ghost:hover{background:#EAF3FC;}
+
+  .mini-preview{
+    margin-top:26px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 16px;
+    background:#FAFAF9;
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .mini-avatar{
+    width:36px;height:36px;border-radius:50%;
+    background:linear-gradient(135deg,var(--blue),var(--blue-deep));
+    flex-shrink:0;
+  }
+  .mini-text{font-size:12.5px;color:var(--ink-soft); line-height:1.5;}
+  .mini-text b{color:var(--ink);}
+
+  /* QUIZ */
+  .progress-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .progress-label span:last-child{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--green);
+  }
+  .progress-track{
+    height:6px;
+    background:var(--line);
+    border-radius:4px;
+    overflow:hidden;
+    margin-bottom:26px;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--green);
+    border-radius:4px;
+    transition:width .35s ease;
+  }
+  .q-eyebrow{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--blue);
+    margin-bottom:10px;
+  }
+  .q-text{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:21px;
+    font-weight:700;
+    line-height:1.3;
+    margin:0 0 22px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    text-align:left;
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:14px 16px;
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    line-height:1.45;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .12s ease, background .12s ease, transform .08s ease;
+  }
+  .option:hover{
+    border-color:var(--blue);
+    background:#F7FAFD;
+    transform:translateX(2px);
+  }
+  .option:active{transform:translateX(2px) scale(.995);}
+
+  .back-row{
+    margin-top:20px;
+    display:flex;
+    justify-content:flex-start;
+  }
+  .link-btn{
+    background:none;border:none;
+    color:var(--ink-soft);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    padding:4px 0;
+  }
+  .link-btn:hover{color:var(--ink);}
+
+  /* RESULT */
+  .result-wrap{display:none;}
+  .result-tag{
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:6px;
+  }
+  .result-flag{
+    display:flex;
+    justify-content:center;
+    margin:6px 0 12px;
+  }
+  .result-flag img{
+    width:90px;
+    height:60px;
+    object-fit:cover;
+    border-radius:8px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.2);
+  }
+  .flag-chip{
+    display:block;
+    overflow:hidden;
+  }
+  .flag-chip svg{
+    display:block;
+    width:100%;
+    height:100%;
+  }
+  .result-flag .flag-chip{
+    width:90px;
+    height:60px;
+    border-radius:8px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.2);
+  }
+  .result-team{
+    text-align:center;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:28px;
+    font-weight:700;
+    margin:0 0 4px;
+  }
+  .result-persona{
+    text-align:center;
+    font-size:14.5px;
+    color:var(--blue-deep);
+    font-weight:600;
+    margin-bottom:20px;
+  }
+  .result-desc{
+    font-size:15.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+    margin:0 auto 30px;
+    max-width:420px;
+    text-align:center;
+  }
+
+  .result-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  /* CALCULATING SCREEN */
+  .calc-wrap{display:none;}
+  .calc-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:20px;
+    text-align:center;
+    margin:4px 0 8px;
+  }
+  .calc-status{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-weight:600;
+    min-height:18px;
+    margin-bottom:22px;
+  }
+  .calc-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+  }
+  .calc-flag{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    padding:16px 4px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    background:var(--card);
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .calc-flag img{
+    width:34px;
+    height:23px;
+    object-fit:cover;
+    border-radius:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.18);
+    display:block;
+  }
+  .calc-flag .flag-chip{
+    width:34px;
+    height:23px;
+    border-radius:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.18);
+  }
+  .calc-flag .calc-name{
+    font-size:10.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+    letter-spacing:0.01em;
+  }
+  .calc-flag.active{
+    transform:scale(1.14);
+    border-color:var(--glow-color, var(--blue));
+    box-shadow:0 0 0 4px var(--glow-shadow, rgba(10,102,194,0.15));
+    background:#FAFAF9;
+    animation:flagPop .25s ease-out;
+  }
+  .calc-flag.active .calc-name{color:var(--glow-color, var(--blue-deep));}
+  @keyframes flagPop{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.24);}
+    100%{transform:scale(1.14);}
+  }
+  .calc-flag.locked{
+    border-color:var(--green);
+    background:#EFFAF4;
+    transform:scale(1.2);
+    box-shadow:0 0 0 5px rgba(5,118,66,0.22);
+    animation:flagPopBig .55s ease-out;
+  }
+  .calc-flag.locked .calc-name{color:var(--green);}
+  @keyframes flagPopBig{
+    0%{transform:scale(1);}
+    40%{transform:scale(1.32);}
+    70%{transform:scale(1.08);}
+    100%{transform:scale(1.2);}
+  }
+  .calc-grid-wrap{position:relative;}
+  .confetti-layer{
+    position:absolute;
+    inset:0;
+    overflow:visible;
+    pointer-events:none;
+    z-index:5;
+  }
+  .confetti-dot{
+    position:absolute;
+    opacity:0;
+    transform:translate(-50%,-50%);
+  }
+  .confetti-dot img{
+    width:20px;
+    height:14px;
+    object-fit:cover;
+    border-radius:3px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.2);
+    display:block;
+  }
+  .confetti-dot .flag-chip{
+    width:20px;
+    height:14px;
+    border-radius:3px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.2);
+  }
+  .confetti-dot.burst{
+    animation:confettiBurst .9s ease-out forwards;
+  }
+  @keyframes confettiBurst{
+    0%{opacity:1; transform:translate(-50%,-50%) translate(0,0) rotate(0deg) scale(1);}
+    100%{opacity:0; transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.6);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important;}
+  }
+  @media (max-width:480px){
+    .card{padding:24px 18px;}
+    h1{font-size:25px;}
+    .q-text{font-size:18px;}
+    .calc-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="brand-badge">CS</span>CareerSquad</div>
+    <div class="notif"><span class="notif-dot"></span>1 new: Your team's tournament is over</div>
+  </div>
+
+  <div class="card">
+
+    <!-- INTRO -->
+    <div id="screen-intro">
+      <span class="eyebrow">Assessment · 5 Questions</span>
+      <h1>The Game Isn't Over</h1>
+      <p class="sub">Your team's out — or maybe never showed up (hi, Italy). Either way, let's find you a replacement to root for through the end of the tournament — matched entirely on <b>how you behave on LinkedIn</b>. Answer honestly — your new favorite team is just five questions away.</p>
+      <button class="btn btn-primary" onclick="startQuiz()">Start Assessment →</button>
+
+      <div class="mini-preview">
+        <div class="mini-avatar"></div>
+        <div class="mini-text"><b>How it works —</b> 5 quick questions about your posting habits, humble-brags, and carousel opinions. We match your energy to one of the 8 teams still alive heading into the quarterfinals.</div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="screen-quiz" style="display:none;">
+      <div class="progress-label">
+        <span id="progress-text">Question 1 of 5</span>
+        <span id="progress-pct">Profile strength: 12%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12%;"></div></div>
+
+      <div class="q-eyebrow" id="q-eyebrow">Scenario</div>
+      <h2 class="q-text" id="q-text"></h2>
+      <div class="options" id="q-options"></div>
+
+      <div class="back-row">
+        <button class="link-btn" id="back-btn" onclick="goBack()" style="visibility:hidden;">← Previous question</button>
+      </div>
+    </div>
+
+    <!-- CALCULATING -->
+    <div id="screen-calculating" class="calc-wrap">
+      <h2 class="calc-title">Calculating your match...</h2>
+      <div class="calc-status" id="calc-status">Reading your posting habits...</div>
+      <div class="calc-grid-wrap">
+        <div class="calc-grid" id="calc-grid"></div>
+        <div class="confetti-layer" id="confetti-layer"></div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="screen-result" class="result-wrap">
+      <div class="result-tag">🎉 You've found your team</div>
+      <div class="result-flag" id="res-flag"></div>
+      <h2 class="result-team" id="res-team">Spain</h2>
+      <div class="result-persona" id="res-persona">The Process Person</div>
+      <p class="result-desc" id="res-desc"></p>
+
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="restart()">Retake assessment</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    eyebrow: "Post format",
+    text: "Your go-to LinkedIn post format is:",
+    options: [
+      { t: "A photo of you mid-TED-talk, one hand raised, captioned like it's just another Tuesday", team: "france" },
+      { t: "A tribute to 'the best team I've ever been part of,' paired with a blurry photo from a team retreat", team: "belgium" },
+      { t: "A self-deprecating story about being a total hot mess — neatly reframed into a tidy '5 lessons learned' carousel", team: "spain" },
+      { t: "You don't really post. You just like other people's things and call it networking.", team: "england" },
+    ]
+  },
+  {
+    eyebrow: "Your LinkedIn Move",
+    text: "Something publicly goes wrong. Your move:",
+    options: [
+      { t: "Turn it into an underdog thread: 'They counted us out.'", team: "morocco" },
+      { t: "Say nothing. Quietly fix it. Let next quarter's numbers talk.", team: "norway" },
+      { t: "Post \u201cWe\u2019re listening\u201d and then mute the thread.", team: "argentina" },
+      { t: "Drop a photo of a whiteboard and caption it: \u201cBack to first principles.\u201d", team: "switzerland" },
+    ]
+  },
+  {
+    eyebrow: "Headline",
+    text: "Your LinkedIn headline currently reads:",
+    options: [
+      { t: "'Building something special 🚀'", team: "france" },
+      { t: "'Building at the intersection of meetings and more meetings'", team: "switzerland" },
+      { t: "'Humbled to announce I have updated my headline'", team: "morocco" },
+      { t: "'Ex-McKinsey, pre-humility'", team: "england" },
+    ]
+  },
+  {
+    eyebrow: "The flex",
+    text: "Your proudest kind of LinkedIn flex is:",
+    options: [
+      { t: "Reposting your own old post because 'this aged well'", team: "belgium" },
+      { t: "One stat, no caption: '47% QoQ. That's it. That's the post.'", team: "norway" },
+      { t: "Barack Obama \u201ccelebrates\u201d your post", team: "argentina" },
+      { t: "Getting endorsed by a 'former intern' for strategic vision", team: "spain" },
+    ]
+  },
+  {
+    eyebrow: "Criticism",
+    text: "Someone leaves a critical comment on your post. You:",
+    options: [
+      { t: "Like the comment. Never respond. Confidence.", team: "france" },
+      { t: "Don't respond. You don't need to. Everyone else replies for you.", team: "argentina" },
+      { t: "Quietly edit the post to preempt the point. Never mention the comment again.", team: "norway" },
+      { t: "Screenshot it for next week's 'lessons from criticism' post", team: "belgium" },
+    ]
+  },
+];
+
+const teams = {
+  france: {
+    flag: "fr", name: "France", persona: "The Main Character",
+    desc: "France plays with total belief in its own brilliance — a squad built on individual magic (hello, Mbappé) that expects to win simply because it's France. If you carry yourself with main-character confidence, this is a team that will reward you with moments nobody else could pull off. Basically: you're the person who turns a routine update into a keynote.",
+    headline: "Visionary in Transition | Recently Eliminated",
+    caption: "🚨 Big news 🚨 After some reflection, I'm thrilled to announce my next chapter: backing Team France for the rest of this World Cup. Grateful for my old team's era — couldn't have gotten here without it — but it's time to align with a squad that matches my ambition. Onward and upward. 🇫🇷🔥\n\n#NewChapter #MainCharacterEnergy #WorldCup2026",
+    comment: " Loved this. Following your journey closely 👏"
+  },
+  belgium: {
+    flag: "be", name: "Belgium", persona: "The Golden Generation",
+    desc: "Belgium's 'golden generation' has been chasing one great final for over a decade — De Bruyne and company still out there believing this could finally be the run. It's a stubborn, lovely kind of hope: talent that refuses to accept its story is already written. Basically: you're the one whose 'About' section still leads with an accomplishment from 2014.",
+    headline: "20+ Years of Generational Experience | Still Delivering",
+    caption: "I don't usually post about football, but I'm officially aligning with Belgium for the rest of this World Cup. Yes, the 'golden generation' talk started over a decade ago. Yes, we're still here. Some of us just take longer to close the deal.\n\nRooting for the comeback we all deserve. 🇧🇪\n\n#StillHere #GoldenGeneration #WorldCup2026",
+    comment: " Tenure like this doesn't lie. Rooting for you!"
+  },
+  spain: {
+    flag: "es", name: "Spain", persona: "The Patient Perfectionist",
+    desc: "Spain built a dynasty on patience — endless short passes, total trust in the system over any single star. It's football as craft, not chaos. Backing Spain means believing that careful, quiet work eventually wins the day. Basically: you're the one who turns every setback into a slide deck about 'the process.'",
+    headline: "Process > Outcomes | Systems Thinker | Trusts the Framework",
+    caption: "Following an internal review of my fan priorities, I've decided to align my support behind Spain for the rest of the World Cup. The process speaks for itself: composure, structure, trust in the system. The best result isn't always the flashiest — it's the most repeatable.\n\n🇪🇸 ⚙️\n\n#TrustTheProcess #SystemsThinking #WorldCup2026",
+    comment: " This resonates. Repeatability is underrated."
+  },
+  england: {
+    flag: "gb-eng", name: "England", persona: "The Eternal Optimist (Again)",
+    desc: "England has broken hearts for decades and keeps coming back for more — 'it's coming home' as much a running joke as a genuine hope. There's something charming about a team, and a fanbase, that never quite gives up no matter how many times it's let down. Basically: you're the one who posts 'growth mindset' after every rejection and somehow means it.",
+    headline: "Perpetually Optimistic | This Might Finally Be The Year",
+    caption: "Look, I know how this sounds. But I'm putting my heart back out there and backing England for the rest of the World Cup. Is it coming home? Probably not! Am I doing this anyway? Absolutely.\n\nVulnerability is a strength. 🏴\n\n#ItsComingHomeEventually #RelentlesslyOptimistic #WorldCup2026",
+    comment: " Brave post. We're all rooting for you (still)."
+  },
+  morocco: {
+    flag: "ma", name: "Morocco", persona: "The Beautiful Surprise",
+    desc: "In 2022, Morocco became the first African nation ever to reach a World Cup semifinal — no giant budget, no long pedigree, just a squad that played like nobody had told them they weren't supposed to be there. Backing Morocco means believing in the beautiful surprise. Basically: you're the one everyone underestimates right up until you post the results.",
+    headline: "Bootstrapped and Proving It | Underdog by Design",
+    caption: "Huge respect to my old team — it built the foundation. But I'm all in on Morocco for the rest of this tournament. No co-host stadium. No home crowd. Just proof that heart, hustle, and a chip on your shoulder can take you further than anyone expected.\n\nUnderdog energy only. 🇲🇦\n\n#AgainstAllOdds #BootstrappedRun #WorldCup2026",
+    comment: " This is the kind of story LinkedIn was made for."
+  },
+  norway: {
+    flag: "no", name: "Norway", persona: "The Quiet Phenomenon",
+    desc: "Norway is here largely because one player keeps quietly doing historic things — Haaland doesn't need to say much when the numbers speak for themselves. It's proof that the loudest statement is sometimes just showing up and delivering, over and over. Basically: you're the one who never posts, then drops a single stat that outperforms everyone else's whole month.",
+    headline: "Ships Quietly. Results Speak.",
+    caption: "Quick update: I'm now supporting Norway for the rest of the World Cup. That's it. That's the post.\n\n🇳🇴\n\n#NoFluff #JustResults #WorldCup2026",
+    comment: " Say less. Following."
+  },
+  argentina: {
+    flag: "ar", name: "Argentina", persona: "The Living Legend",
+    desc: "Messi may be playing his last World Cup, and Argentina carries itself like a team that knows it's part of something historic. There's a warmth to rooting for a legend on one more run — no need to prove anything, just one more chapter worth watching. Basically: you're the one whose old posts still get more engagement than everyone else's new ones.",
+    headline: "20+ Years of Proven Output | The Standard, Not The Exception",
+    caption: "Not usually one to make announcements, but I'm backing Argentina for the rest of this World Cup. Some of us don't need to prove anything anymore — we just keep showing up and let the record speak. One more historic run, for old time's sake. 🇦🇷\n\n#TheStandard #StillTheBest #WorldCup2026",
+    comment: " Legend behavior. No further questions."
+  },
+  switzerland: {
+    flag: "ch", name: "Switzerland", persona: "The Composed Closer",
+    desc: "Switzerland just won a World Cup knockout on penalties — nerves of steel, zero fuss, job done. Meticulous and unshakeable under pressure, this is exactly the kind of steady you want closing out a shootout, or anything else that's on the line. Basically: you're the one who fixes the crisis quietly and lets the calm speak for itself.",
+    headline: "Unshakeable Under Pressure | Closes What Others Choke On",
+    caption: "Update: I'm now backing Switzerland for the rest of the World Cup. They just won a shootout without blinking. That's not luck — that's just how composed people operate. 🇨🇭\n\n#NervesOfSteel #ComposedUnderPressure #WorldCup2026",
+    comment: " This is exactly why I trust you with the high-stakes stuff."
+  },
+};
+
+let currentQ = 0;
+let answers = [];
+let scores = {};
+
+function startQuiz(){
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-quiz').style.display = 'block';
+  buildCalcGrid();
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = questions[currentQ];
+  document.getElementById('q-eyebrow').textContent = q.eyebrow;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress-text').textContent = `Question ${currentQ+1} of ${questions.length}`;
+  const pct = Math.round(((currentQ) / questions.length) * 88) + 12;
+  document.getElementById('progress-pct').textContent = `Profile strength: ${pct}%`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('back-btn').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+
+  const optWrap = document.getElementById('q-options');
+  optWrap.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt.t;
+    btn.onclick = () => selectOption(opt.team);
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectOption(team){
+  answers[currentQ] = team;
+  if(currentQ < questions.length - 1){
+    currentQ++;
+    renderQuestion();
+  } else {
+    const teamKey = computeScores();
+    document.getElementById('screen-quiz').style.display = 'none';
+    document.getElementById('screen-calculating').style.display = 'block';
+    runCalculatingAnimation(teamKey);
+  }
+}
+
+function goBack(){
+  if(currentQ > 0){
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function computeScores(){
+  scores = {};
+  answers.forEach(team => {
+    if(!team) return;
+    scores[team] = (scores[team] || 0) + 1;
+  });
+  let best = null, bestScore = -1;
+  Object.keys(scores).forEach(team => {
+    if(scores[team] > bestScore){
+      bestScore = scores[team];
+      best = team;
+    }
+  });
+  return best;
+}
+
+const flagSvgs = {
+  fr: '<svg viewBox="0 0 39 30" xmlns="http://www.w3.org/2000/svg"><rect width="13" height="30" fill="#0055A4"/><rect x="13" width="13" height="30" fill="#fff"/><rect x="26" width="13" height="30" fill="#EF4135"/></svg>',
+  be: '<svg viewBox="0 0 39 30" xmlns="http://www.w3.org/2000/svg"><rect width="13" height="30" fill="#000"/><rect x="13" width="13" height="30" fill="#FDDA24"/><rect x="26" width="13" height="30" fill="#EF3340"/></svg>',
+  es: '<svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="30" fill="#AA151B"/><rect y="7.5" width="40" height="15" fill="#F1BF00"/></svg>',
+  "gb-eng": '<svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="30" fill="#fff"/><rect y="12" width="40" height="6" fill="#CE1124"/><rect x="17" width="6" height="30" fill="#CE1124"/></svg>',
+  ma: '<svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="30" fill="#C1272D"/><path d="M20,7 L22.5,13 L29,13 L23.8,16.8 L25.8,23 L20,19 L14.2,23 L16.2,16.8 L11,13 L17.5,13 Z" fill="#006233"/></svg>',
+  no: '<svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="30" fill="#EF2B2D"/><rect x="10" width="8" height="30" fill="#fff"/><rect y="11" width="40" height="8" fill="#fff"/><rect x="12" width="4" height="30" fill="#002868"/><rect y="13" width="40" height="4" fill="#002868"/></svg>',
+  ar: '<svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="30" fill="#74ACDF"/><rect y="10" width="40" height="10" fill="#fff"/><rect y="20" width="40" height="10" fill="#74ACDF"/><circle cx="20" cy="15" r="4" fill="#F6B40E"/></svg>',
+  ch: '<svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="30" fill="#D52B1E"/><rect x="16" y="6" width="8" height="18" fill="#fff"/><rect x="10" y="12" width="20" height="6" fill="#fff"/></svg>',
+};
+
+function flagImg(code, alt){
+  const svg = flagSvgs[code] || '';
+  return `<span class="flag-chip" role="img" aria-label="${alt} flag">${svg}</span>`;
+}
+
+function buildCalcGrid(){
+  const grid = document.getElementById('calc-grid');
+  grid.innerHTML = '';
+  Object.keys(teams).forEach(key => {
+    const t = teams[key];
+    const tile = document.createElement('div');
+    tile.className = 'calc-flag';
+    tile.id = 'calc-' + key;
+    tile.innerHTML = `${flagImg(t.flag, t.name)}<span class="calc-name">${t.name}</span>`;
+    grid.appendChild(tile);
+  });
+}
+
+const calcStatusPhrases = [
+  "Reading your posting habits...",
+  "Cross-referencing carousel opinions...",
+  "Weighing humble-brag frequency...",
+  "Matching tactical philosophy...",
+  "Finalizing your team...",
+];
+
+const spinPalette = [
+  { solid: "#0A66C2", glow: "rgba(10,102,194,0.22)" },
+  { solid: "#F5B800", glow: "rgba(245,184,0,0.26)" },
+  { solid: "#057642", glow: "rgba(5,118,66,0.22)" },
+  { solid: "#CC1016", glow: "rgba(204,16,22,0.22)" },
+  { solid: "#8E44AD", glow: "rgba(142,68,173,0.22)" },
+  { solid: "#FF7A59", glow: "rgba(255,122,89,0.26)" },
+  { solid: "#00A9A5", glow: "rgba(0,169,165,0.22)" },
+];
+
+function spawnConfetti(targetEl){
+  const layer = document.getElementById('confetti-layer');
+  const wrapRect = layer.parentElement.getBoundingClientRect();
+  const elRect = targetEl.getBoundingClientRect();
+  const originX = elRect.left - wrapRect.left + elRect.width / 2;
+  const originY = elRect.top - wrapRect.top + elRect.height / 2;
+  const teamList = Object.values(teams);
+
+  for(let i = 0; i < 20; i++){
+    const dot = document.createElement('span');
+    dot.className = 'confetti-dot';
+    const t = teamList[i % teamList.length];
+    dot.innerHTML = flagImg(t.flag, t.name);
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 40 + Math.random() * 75;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist - 26;
+    dot.style.left = originX + 'px';
+    dot.style.top = originY + 'px';
+    dot.style.setProperty('--tx', tx + 'px');
+    dot.style.setProperty('--ty', ty + 'px');
+    dot.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+    layer.appendChild(dot);
+    requestAnimationFrame(() => dot.classList.add('burst'));
+    setTimeout(() => dot.remove(), 950);
+  }
+}
+
+function runCalculatingAnimation(targetKey){
+  const keysOrder = Object.keys(teams);
+  const totalSteps = 22;
+  const targetIndex = keysOrder.indexOf(targetKey);
+  const startOffset = (targetIndex - (totalSteps - 1) % keysOrder.length + keysOrder.length) % keysOrder.length;
+  const sequence = [];
+  for(let i = 0; i < totalSteps; i++){
+    sequence.push(keysOrder[(startOffset + i) % keysOrder.length]);
+  }
+
+  const statusEl = document.getElementById('calc-status');
+  let statusIdx = 0;
+  statusEl.textContent = calcStatusPhrases[0];
+  const statusInterval = setInterval(() => {
+    statusIdx = (statusIdx + 1) % calcStatusPhrases.length;
+    statusEl.textContent = calcStatusPhrases[statusIdx];
+  }, 550);
+
+  let cumulative = 0;
+  sequence.forEach((key, i) => {
+    const t = i / (totalSteps - 1);
+    const delay = 55 + t * t * 320;
+    cumulative += delay;
+    setTimeout(() => {
+      document.querySelectorAll('.calc-flag').forEach(el => el.classList.remove('active'));
+      const el = document.getElementById('calc-' + key);
+      if(el){
+        const color = spinPalette[i % spinPalette.length];
+        el.style.setProperty('--glow-color', color.solid);
+        el.style.setProperty('--glow-shadow', color.glow);
+        el.classList.add('active');
+      }
+      if(i === sequence.length - 1){
+        clearInterval(statusInterval);
+        statusEl.textContent = "Match found.";
+        el.classList.add('locked');
+        spawnConfetti(el);
+        setTimeout(() => {
+          document.getElementById('screen-calculating').style.display = 'none';
+          renderResult(targetKey);
+        }, 650);
+      }
+    }, cumulative);
+  });
+}
+
+function renderResult(teamKey){
+  const team = teams[teamKey];
+
+  document.getElementById('screen-result').style.display = 'block';
+
+  document.getElementById('res-flag').innerHTML = flagImg(team.flag, team.name);
+  document.getElementById('res-team').textContent = team.name;
+  document.getElementById('res-persona').textContent = team.persona;
+  document.getElementById('res-desc').textContent = team.desc;
+}
+
+function restart(){
+  currentQ = 0;
+  answers = [];
+  document.getElementById('screen-result').style.display = 'none';
+  document.getElementById('screen-calculating').style.display = 'none';
+  document.getElementById('screen-intro').style.display = 'block';
+}
+</script>
+</body>
+</html>
