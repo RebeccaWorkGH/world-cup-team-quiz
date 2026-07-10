@@ -465,7 +465,7 @@
     <!-- INTRO -->
     <div id="screen-intro">
       <h1>The Game Isn't Over</h1>
-      <p class="sub">Your team's out — or maybe never showed up (hi, Italy). Either way, let's find you a replacement to root for through the end of the tournament — matched entirely on <b>how you behave on LinkedIn</b>. Answer honestly — your new favorite team is just five questions away.</p>
+      <p class="sub">Your team's out — or maybe never showed up (hi, Italy). Either way, let's find you a replacement to cheer for through the end of the tournament — matched entirely on <b>how you behave on LinkedIn</b>. Answer honestly — your new favorite team is just five questions away.</p>
       <button class="btn btn-primary" onclick="startQuiz()">Start Assessment →</button>
 
       <div class="mini-preview">
@@ -528,6 +528,29 @@ const questions = [
       { t: "A tribute to 'the best team I've ever been part of,' paired with a blurry photo from a team retreat", team: "belgium" },
       { t: "A self-deprecating story about being a total hot mess — neatly reframed into a tidy '5 lessons learned' carousel", team: "spain" },
       { t: "You don't really post. You just like other people's things and call it networking.", team: "england" },
+      { t: "Whatever my comms team posts on my behalf", team: "argentina" },
+    ]
+  },
+  {
+    eyebrow: "The flex",
+    text: "Your proudest kind of LinkedIn flex is:",
+    options: [
+      { t: "A high school teacher comments \u201cI always knew you would go on to great things\u201d under a post", team: "belgium" },
+      { t: "One stat, no caption: '47% QoQ. That's it. That's the post.'", team: "norway" },
+      { t: "Barack Obama reposts your analysis of the current political climate", team: "argentina" },
+      { t: "Getting endorsed by a 'former intern' for strategic vision", team: "spain" },
+      { t: "A stranger DMs, \u201cYou don\u2019t know me, but your post helped me not quit today.\u201d", team: "morocco" },
+    ]
+  },
+  {
+    eyebrow: "Headline",
+    text: "Your LinkedIn headline currently reads:",
+    options: [
+      { t: "'Building something special 🚀'", team: "france" },
+      { t: "It's just your job title", team: "switzerland" },
+      { t: "'Humbled to announce I have updated my headline'", team: "morocco" },
+      { t: "'Ex-McKinsey, pre-humility'", team: "england" },
+      { t: "'Strategic Strategist Strategically Strategizing Strategies'", team: "spain" },
     ]
   },
   {
@@ -538,26 +561,7 @@ const questions = [
       { t: "Say nothing. Quietly fix it. Let next quarter's numbers talk.", team: "norway" },
       { t: "Post \u201cWe\u2019re listening\u201d and then mute the thread.", team: "argentina" },
       { t: "Drop a photo of a whiteboard and caption it: \u201cBack to first principles.\u201d", team: "switzerland" },
-    ]
-  },
-  {
-    eyebrow: "Headline",
-    text: "Your LinkedIn headline currently reads:",
-    options: [
-      { t: "'Building something special 🚀'", team: "switzerland" },
-      { t: "It's just your title", team: "france" },
-      { t: "'Humbled to announce I have updated my headline'", team: "morocco" },
-      { t: "'Ex-McKinsey, pre-humility'", team: "england" },
-    ]
-  },
-  {
-    eyebrow: "The flex",
-    text: "Your proudest kind of LinkedIn flex is:",
-    options: [
-      { t: "Reposting your own old post because 'this aged well'", team: "belgium" },
-      { t: "One stat, no caption: '47% QoQ. That's it. That's the post.'", team: "norway" },
-      { t: "Barack Obama \u201ccelebrates\u201d your post", team: "argentina" },
-      { t: "A former intern writing a teary post about how you kickstarted their career", team: "spain" },
+      { t: "Call my comms team and tell them to post on my behalf", team: "switzerland" },
     ]
   },
   {
@@ -565,9 +569,10 @@ const questions = [
     text: "Someone leaves a critical comment on your post. You:",
     options: [
       { t: "Like the comment. Never respond. Confidence.", team: "france" },
-      { t: "Don't respond. You don't need to. Everyone else replies for you.", team: "argentina" },
+      { t: "You say, \u201cThis is exactly the kind of dialogue I was hoping to spark,\u201d while your eye twitches.", team: "argentina" },
       { t: "Quietly edit the post to preempt the point. Never mention the comment again.", team: "norway" },
-      { t: "Respond thoughtfully and offer to co-write a HBR article", team: "belgium" },
+      { t: "Reply, \u201cYou\u2019re right to ask this. I hadn\u2019t thought about it that way, and I\u2019m genuinely grateful you took the time to say it.\u201d", team: "belgium" },
+      { t: "Write a gracious, measured response, then send a screenshot to the group chat with \u201ccan you believe this guy?\u201d", team: "england" },
     ]
   },
 ];
@@ -575,14 +580,14 @@ const questions = [
 const teams = {
   france: {
     flag: "fr", name: "France", persona: "The Main Character",
-    desc: "France plays with total belief in its own brilliance — a squad built on individual magic (hello, Mbappé) that came to win. If you carry yourself with main-character confidence, this is a team that will reward you with moments nobody else could pull off. Basically: you're the person who turns a routine update into a keynote.",
+    desc: "France plays with total belief in its own brilliance — a squad built on individual magic (hello, Mbappé) that expects to win simply because it's France. If you carry yourself with main-character confidence, this is a team that will reward you with moments nobody else could pull off. Basically: you're the person who turns a routine update into a keynote.",
     headline: "Visionary in Transition | Recently Eliminated",
     caption: "🚨 Big news 🚨 After some reflection, I'm thrilled to announce my next chapter: backing Team France for the rest of this World Cup. Grateful for my old team's era — couldn't have gotten here without it — but it's time to align with a squad that matches my ambition. Onward and upward. 🇫🇷🔥\n\n#NewChapter #MainCharacterEnergy #WorldCup2026",
     comment: " Loved this. Following your journey closely 👏"
   },
   belgium: {
     flag: "be", name: "Belgium", persona: "The Golden Generation",
-    desc: "Belgium's 'golden generation' has been chasing one great final for over a decade — De Bruyne and company still out there believing this could finally be the run. It's a stubborn, gritty kind of hope: talent that refuses to accept its story is already written. Basically: you're the one whose 'About' section still leads with an accomplishment from 2014, but you know you've got a lot more where that came from.",
+    desc: "Belgium's 'golden generation' has been chasing one great final for over a decade — De Bruyne and company still out there believing this could finally be the run. It's a stubborn, lovely kind of hope: talent that refuses to accept its story is already written. Basically: you're the one whose 'About' section still leads with an accomplishment from 2014.",
     headline: "20+ Years of Generational Experience | Still Delivering",
     caption: "I don't usually post about football, but I'm officially aligning with Belgium for the rest of this World Cup. Yes, the 'golden generation' talk started over a decade ago. Yes, we're still here. Some of us just take longer to close the deal.\n\nRooting for the comeback we all deserve. 🇧🇪\n\n#StillHere #GoldenGeneration #WorldCup2026",
     comment: " Tenure like this doesn't lie. Rooting for you!"
@@ -596,7 +601,7 @@ const teams = {
   },
   england: {
     flag: "gb-eng", name: "England", persona: "The Eternal Optimist (Again)",
-    desc: "England has broken hearts for decades (since 1966, if we are counting) and keeps coming back for more — 'it's coming home' as much a running joke as a genuine hope. But make no mistake - there's no counting you out, and among your assets you have a set of fans out there who will travel to any corner of the Earth to see you win. So go ahead and post 'growth mindset' after a failure or rejection but deep down - it's time to BELIEVE.",
+    desc: "England has broken hearts for decades and keeps coming back for more — 'it's coming home' as much a running joke as a genuine hope. There's something charming about a team, and a fanbase, that never quite gives up no matter how many times it's let down. Basically: you're the one who posts 'growth mindset' after every rejection and somehow means it.",
     headline: "Perpetually Optimistic | This Might Finally Be The Year",
     caption: "Look, I know how this sounds. But I'm putting my heart back out there and backing England for the rest of the World Cup. Is it coming home? Probably not! Am I doing this anyway? Absolutely.\n\nVulnerability is a strength. 🏴\n\n#ItsComingHomeEventually #RelentlesslyOptimistic #WorldCup2026",
     comment: " Brave post. We're all rooting for you (still)."
@@ -617,7 +622,7 @@ const teams = {
   },
   argentina: {
     flag: "ar", name: "Argentina", persona: "The Living Legend",
-    desc: "Messi may be playing his last World Cup, and Argentina carries itself like a team that knows it's part of something historic. There's a warmth to rooting for a legend on one more run — no need to prove anything, just one more chapter worth watching. Basically: you're the one whose old posts still get more engagement than everyone else's new ones.",
+    desc: "Messi may be playing his last World Cup, and Argentina carries itself like a team that knows it's part of something historic. There's a warmth to rooting for a legend on one more run — no need to prove anything, just one more chapter worth watching. Basically: you're the one whose reputation was earned long before anyone started counting likes — and it'll outlast every one of them.",
     headline: "20+ Years of Proven Output | The Standard, Not The Exception",
     caption: "Not usually one to make announcements, but I'm backing Argentina for the rest of this World Cup. Some of us don't need to prove anything anymore — we just keep showing up and let the record speak. One more historic run, for old time's sake. 🇦🇷\n\n#TheStandard #StillTheBest #WorldCup2026",
     comment: " Legend behavior. No further questions."
